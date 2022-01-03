@@ -40,11 +40,55 @@ p_width=150;
 p_height=450;
 p_length=500;
 
+//大四边形
+parallelgram();
+
+translate([p_width*2+30,0,0]){
+mirror([1,0,0]){
+    parallelgram();
+    }
+}
+//底座
+base_box();
+
+
+
+module base_box(){
+//前    
+    translate([-10,0,-10])
+    rotate([0,90,0])
+    extrusion(E2020,2*p_width+40,center=false,cornerHole=true);
+
+//后
+        translate([-10,p_length+20,-10])
+    rotate([0,90,0])
+    extrusion(E2020,2*p_width+40,center=false,cornerHole=true);
+    }
+    
+//左
+    translate([0,10,-10])
+    rotate([-90,90,0])
+    extrusion(E2020,p_length,center=false,cornerHole=true);
+
+//右
+    translate([2*p_width+20,10,-10])
+    rotate([-90,90,0])
+    extrusion(E2020,p_length,center=false,cornerHole=true);
+
+module parallelgram(){
 //四边形连接器
-for(k=[[0,0,0],[0,0,p_height-40],[p_width+20,0,p_height+130]]){
+for(k=[[0,0,0],[0,0,p_height-40]]){
     translate(k){
 translate([0,10,10]){
 rotate([-90,0,0]){
+extrusion(E2020,p_length,center=false,cornerHole=true);}
+}
+}}
+
+for(k=[[p_width/2,0,p_height+40]]){
+    translate(k){
+translate([0,10,10]){
+rotate([-90,45,0]){
 extrusion(E2020,p_length,center=false,cornerHole=true);}
 }
 }}
@@ -77,14 +121,15 @@ extrusion_wedge_up();}}}}
 
 
 //右侧
-translate([p_width+20,0,p_width]){
-    extrusion(E2020,p_height,center=false,cornerHole=true);
-    
-        translate([
-    10,0,p_height+20
-    ]){
-    rotate([0,90+45,0]){
-extrusion_wedge_down();}}
-    }
+//translate([p_width+20,0,p_width]){
+//    extrusion(E2020,p_height,center=false,cornerHole=true);
+//    
+//        translate([
+//    10,0,p_height+20
+//    ]){
+//    rotate([0,90+45,0]){
+//extrusion_wedge_down();}}
+//    }
+}
 }
 }
