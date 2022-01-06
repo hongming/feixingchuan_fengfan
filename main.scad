@@ -19,8 +19,16 @@
 
 include <NopSCADlib/utils/core/core.scad>
 include <NopSCADlib/vitamins/extrusions.scad>
+include <NopSCADlib/utils/layout.scad>
+include <NopSCADlib/printed/flat_hinge.scad>
 include <extrusion_wedge_up.scad>
 include <extrusion_wedge_down.scad>
+include<linear_actuator.scad>
+
+
+
+
+
 
 /*
 有两个部分组成：升降结构、ROR结构。
@@ -31,7 +39,7 @@ ROR用于放置处于零位的望远镜结构，包含一个滑动顶盖。顶�
 /*
 Parallelogram平行四边形
 宽：150mm
-高：450mm
+高：450mm，要考虑增高节
 长：500mm
 
 铝型材尺寸20*20mm
@@ -42,41 +50,113 @@ p_length=500;
 
 //大四边形
 parallelgram();
+translate([-10,-15,0]){
+//polygon_extrude_A();
+    } //盖子A
+translate([-10,p_length+40-5,0]){
+polygon_extrude_A();
+    }//盖子A-后面
+    
+    
 
-translate([p_width*2+30,0,0]){
+//大四边形-左侧覆盖物
+//侧面长方形
+// 左边
+//polygon_extrude_B_wall();
+  //顶盖-左侧
+//polygon_extrude_C_cover_left();  
+
+
+
+
+//大四边形-右侧
+translate([p_width*2+20,0,0]){
+    rotate([0,45,0]){
+        // 右边
+translate([20+10,0,0]){
+    polygon_extrude_B_wall();}
+//顶盖-右侧
+translate([0,p_length+20,0]){
+rotate([0,0,180]){
+polygon_extrude_C_cover_right();}}
+        
+        
 mirror([1,0,0]){
     parallelgram();
-    }
+    translate([-10,-15,0]){
+//polygon_extrude_A();
+        } //盖子A
+translate([-10,p_length+40-5,0]){
+polygon_extrude_A();
+    }//盖子A-后面
+    
+    }}
 }
 //底座
 base_box();
 
 
+//电动伸缩杆-左侧
+translate([250,5,0]){
+rotate([-90,-135,0]){
+linear_actuator_close();}
+}
+ 
+//电动伸缩杆-右侧
+translate([50,p_length-10,0]){
+rotate([90,-24,0]){
+linear_actuator_open();}
+}
+ 
 
+//铰链
+translate([-11,-5,0]){
+    flat_hinges();
+    }
+
+translate([-11,-20+p_length,0]){
+    flat_hinges();
+    }
+
+
+
+//底座
 module base_box(){
 //前    
-    translate([-10,0,-10])
+    translate([10,0,-10])
     rotate([0,90,0])
-    extrusion(E2020,2*p_width+40,center=false,cornerHole=true);
+    extrusion(E2020,2*p_width,center=false,cornerHole=true);
+
+    translate([10,30,-10])
+    rotate([0,90,0])
+    extrusion(E2020,2*p_width,center=false,cornerHole=true);
+
 
 //后
-        translate([-10,p_length+20,-10])
+        translate([10,p_length+20,-10])
     rotate([0,90,0])
-    extrusion(E2020,2*p_width+40,center=false,cornerHole=true);
-    }
+    extrusion(E2020,2*p_width,center=false,cornerHole=true);
+    
+            translate([10,p_length-10,-10])
+    rotate([0,90,0])
+    extrusion(E2020,2*p_width,center=false,cornerHole=true);
+
     
 //左
-    translate([0,10,-10])
+    translate([0,-10,-10])
     rotate([-90,90,0])
-    extrusion(E2020,p_length,center=false,cornerHole=true);
+    extrusion(E2020,p_length+40,center=false,cornerHole=true);
 
 //右
-    translate([2*p_width+20,10,-10])
+    translate([2*p_width+20,-10,-10])
     rotate([-90,90,0])
-    extrusion(E2020,p_length,center=false,cornerHole=true);
+    extrusion(E2020,p_length+40,center=false,cornerHole=true);
 
-module parallelgram(){
+    }
+    
+
 //四边形连接器
+module parallelgram(){
 for(k=[[0,0,0],[0,0,p_height-40]]){
     translate(k){
 translate([0,10,10]){
@@ -85,11 +165,12 @@ extrusion(E2020,p_length,center=false,cornerHole=true);}
 }
 }}
 
-for(k=[[p_width/2,0,p_height+40]]){
+for(k=[[p_width/2,10,p_height+p_width*cos(45)/2]]){
     translate(k){
-translate([0,10,10]){
+translate([0,0,0]){
 rotate([-90,45,0]){
-extrusion(E2020,p_length,center=false,cornerHole=true);}
+extrusion(E2020,p_length,center=false,cornerHole=true);
+    }
 }
 }}
 
@@ -105,7 +186,7 @@ extrusion(E2020,p_height-20,center=false,cornerHole=true);
 extrusion_wedge_down();}}
 
 //中段，下方
-for(i=[[0,0,0],[0,0,p_height-20/cos(45)]]){
+for(i=[[0,0,150],[0,0,p_height-20/cos(45)]]){
     translate(i){
 translate([10,0,20/cos(45)]){
 rotate([0,180,0]){
@@ -120,16 +201,58 @@ rotate([0,0,0]){
 extrusion_wedge_up();}}}}
 
 
-//右侧
-//translate([p_width+20,0,p_width]){
-//    extrusion(E2020,p_height,center=false,cornerHole=true);
-//    
-//        translate([
-//    10,0,p_height+20
-//    ]){
-//    rotate([0,90+45,0]){
-//extrusion_wedge_down();}}
-//    }
 }
 }
 }
+
+
+
+
+
+//四边形覆盖物 -A
+ module polygon_extrude_A(){
+     rotate([-90,-90,0])
+linear_extrude(10,center=true){
+ polygon([[0,0],[p_height-20,0],[p_height-20+p_width+20,p_width+20],[p_width+20,p_width+20]]);
+}}
+
+//四边形覆盖物 -B -侧面长方形
+ module polygon_extrude_B_wall(){
+translate([-20,-20,0])
+cube([10,p_length+40+20,p_height-30]);
+}
+
+
+//四边形覆盖物 -C - 顶盖长方形，左侧
+ module polygon_extrude_C_cover_left(){
+translate([-20-10*cos(45)-1,-20,p_height-10-20*cos(45)])
+     rotate([0,45,0])
+cube([10,p_length+40+20,p_width/cos(45)+20+10+10/cos(45)]);
+}
+
+
+//四边形覆盖物 -C - 顶盖长方形，右侧
+ module polygon_extrude_C_cover_right(){
+translate([-20-10*cos(45)-1,-20,p_height-10-20*cos(45)])
+     rotate([0,45,0])
+cube([10,p_length+40+20,p_width/cos(45)+20+10+10+10/cos(45)+10]);
+}
+
+
+//连接铰链
+
+angle = 0;
+small_hinge = flat_hinge(name = "small", size =[ 50,   16,    4],        pin_d = 2.85,         knuckle_d = 7,                knuckles =3,        screw = M3_dome_screw, screws =3,      clearance = 0.2,       margin =3);
+hinges = [small_hinge];
+
+module flat_hinges()
+    layout([for(h = hinges) hinge_width(h)], 10)
+        if($preview) {
+            translate([-24,25,3.5])
+ rotate([90,0,-90])
+            hinge_fastened_assembly(hinges[$i], 3, 3, angle); }
+        else 
+        {translate([-24,25,3.5])
+ rotate([90,0,-90])
+            hinge_male(hinges[$i]); }
+        
