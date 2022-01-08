@@ -26,7 +26,9 @@ include <extrusion_wedge_down.scad>
 include<linear_actuator.scad>
 
 
-
+/*
+能够快速拆分为两个部分
+*/
 
 
 
@@ -49,11 +51,15 @@ p_height=450;
 p_length=500;
 
 //大四边形
+rotate([0, -30, 0]) {
+    
+
+
 parallelgram();
-translate([-10,-15,0]){
-//polygon_extrude_A();
+translate([-10,-15,-20]){
+polygon_extrude_A();
     } //盖子A
-translate([-10,p_length+40-5,0]){
+translate([-10,p_length+40-5,-20]){
 polygon_extrude_A();
     }//盖子A-后面
     
@@ -62,16 +68,16 @@ polygon_extrude_A();
 //大四边形-左侧覆盖物
 //侧面长方形
 // 左边
-//polygon_extrude_B_wall();
+polygon_extrude_B_wall();
   //顶盖-左侧
-//polygon_extrude_C_cover_left();  
+polygon_extrude_C_cover_left();  
 
-
+}
 
 
 //大四边形-右侧
 translate([p_width*2+20,0,0]){
-    rotate([0,45,0]){
+    rotate([0,50,0]){
         // 右边
 translate([20+10,0,0]){
     polygon_extrude_B_wall();}
@@ -83,10 +89,10 @@ polygon_extrude_C_cover_right();}}
         
 mirror([1,0,0]){
     parallelgram();
-    translate([-10,-15,0]){
-//polygon_extrude_A();
+    translate([-10,-15,-20]){
+polygon_extrude_A();
         } //盖子A
-translate([-10,p_length+40-5,0]){
+translate([-10,p_length+40-5,-20]){
 polygon_extrude_A();
     }//盖子A-后面
     
@@ -104,7 +110,7 @@ linear_actuator_close();}
  
 //电动伸缩杆-右侧
 translate([50,p_length-10,0]){
-rotate([90,-24,0]){
+rotate([90,-20,0]){
 linear_actuator_open();}
 }
  
@@ -120,10 +126,28 @@ translate([-11,-20+p_length,0]){
 
 
 
+windbreak();
+//前后挡板
+module windbreak(){
+
+    translate([0, -5, 0]) {
+        
+    
+    rotate([90,0,0]) {
+        
+
+    
+    color("grey"){
+linear_extrude(height = 10, center = true, convexity = 10){
+polygon(points=[[10,0],[p_width*2+10,0],[p_width*2+10,100],[p_width,200],[10,100]]);
+}    }
+}}}
+
 //底座
 module base_box(){
 //前    
     translate([10,0,-10])
+         color("red")
     rotate([0,90,0])
     extrusion(E2020,2*p_width,center=false,cornerHole=true);
 
@@ -134,6 +158,7 @@ module base_box(){
 
 //后
         translate([10,p_length+20,-10])
+                 color("red")
     rotate([0,90,0])
     extrusion(E2020,2*p_width,center=false,cornerHole=true);
     
@@ -144,11 +169,13 @@ module base_box(){
     
 //左
     translate([0,-10,-10])
+             color("red")
     rotate([-90,90,0])
     extrusion(E2020,p_length+40,center=false,cornerHole=true);
 
 //右
     translate([2*p_width+20,-10,-10])
+             color("red")
     rotate([-90,90,0])
     extrusion(E2020,p_length+40,center=false,cornerHole=true);
 
@@ -211,13 +238,15 @@ extrusion_wedge_up();}}}}
 
 //四边形覆盖物 -A
  module polygon_extrude_A(){
+     color("GhostWhite")
      rotate([-90,-90,0])
 linear_extrude(10,center=true){
- polygon([[0,0],[p_height-20,0],[p_height-20+p_width+20,p_width+20],[p_width+20,p_width+20]]);
+ polygon([[0,0],[p_height,0],[p_height+p_width+20,p_width+20],[p_width+20,p_width+20]]);
 }}
 
 //四边形覆盖物 -B -侧面长方形
  module polygon_extrude_B_wall(){
+          color("GhostWhite")
 translate([-20,-20,0])
 cube([10,p_length+40+20,p_height-30]);
 }
@@ -225,6 +254,7 @@ cube([10,p_length+40+20,p_height-30]);
 
 //四边形覆盖物 -C - 顶盖长方形，左侧
  module polygon_extrude_C_cover_left(){
+          color("GhostWhite")
 translate([-20-10*cos(45)-1,-20,p_height-10-20*cos(45)])
      rotate([0,45,0])
 cube([10,p_length+40+20,p_width/cos(45)+20+10+10/cos(45)]);
@@ -233,6 +263,7 @@ cube([10,p_length+40+20,p_width/cos(45)+20+10+10/cos(45)]);
 
 //四边形覆盖物 -C - 顶盖长方形，右侧
  module polygon_extrude_C_cover_right(){
+          color("GhostWhite")
 translate([-20-10*cos(45)-1,-20,p_height-10-20*cos(45)])
      rotate([0,45,0])
 cube([10,p_length+40+20,p_width/cos(45)+20+10+10+10/cos(45)+10]);
