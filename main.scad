@@ -24,6 +24,7 @@ include <NopSCADlib/printed/flat_hinge.scad>
 include <extrusion_wedge_up.scad>
 include <extrusion_wedge_down.scad>
 include<linear_actuator.scad>
+include<equipments.scad>
 
 
 /*
@@ -31,36 +32,30 @@ include<linear_actuator.scad>
 */
 
 
-
-/*
-有两个部分组成：升降结构、ROR结构。
-升降结构由升降机和连接件组成。
-ROR用于放置处于零位的望远镜结构，包含一个滑动顶盖。顶盖上方放置AllSKY相机和信息汇总屏。
-*/
-
 /*
 Parallelogram平行四边形
 宽：150mm
 高：450mm，要考虑增高节
 长：500mm
+木板：17mm
 
 铝型材尺寸20*20mm
 */
 p_width=150;
-p_height=450;
+p_height=500;
 p_length=500;
-
+wall_thickness=12;
 //大四边形
-rotate([0, -30, 0]) {
-    
-
-
+rotate([0, 0, 0]) {
 parallelgram();
-translate([-10,-15,-20]){
-polygon_extrude_A();
+translate([-10,-10-wall_thickness/2,-20]){
+
+polygon_extrude_A()
+    ;
     } //盖子A
-translate([-10,p_length+40-5,-20]){
-polygon_extrude_A();
+translate([-10,p_length+40-10+wall_thickness/2,-20]){
+polygon_extrude_A()
+    ;
     }//盖子A-后面
     
     
@@ -77,34 +72,48 @@ polygon_extrude_C_cover_left();
 
 //大四边形-右侧
 translate([p_width*2+20,0,0]){
-    rotate([0,50,0]){
+    rotate([0,0,0]){
         // 右边
-translate([20+10,0,0]){
-    polygon_extrude_B_wall();}
+        color("grey")
+translate([20+wall_thickness,0,0]){
+  polygon_extrude_B_wall();
+    }
 //顶盖-右侧
 translate([0,p_length+20,0]){
 rotate([0,0,180]){
-polygon_extrude_C_cover_right();}}
+    
+polygon_extrude_C_cover_right()
+    ;}}
         
         
 mirror([1,0,0]){
     parallelgram();
-    translate([-10,-15,-20]){
+    translate([-10,-10-wall_thickness/2,-20]){
+        color("blue")
 polygon_extrude_A();
         } //盖子A
-translate([-10,p_length+40-5,-20]){
-polygon_extrude_A();
+translate([-10,p_length+40-10+wall_thickness/2,-20]){
+    color("yellow")
+polygon_extrude_A()
+    ;
     }//盖子A-后面
     
     }}
 }
+
+//望远镜
+
+translate([p_width+10,p_length/2,-20]){
+equipments();
+}
+
 //底座
 base_box();
 
 
 //电动伸缩杆-左侧
-translate([250,5,0]){
-rotate([-90,-135,0]){
+translate([290,5,0]){
+rotate([-90,-145,0]){
 linear_actuator_close();}
 }
  
@@ -147,7 +156,7 @@ polygon(points=[[10,0],[p_width*2+10,0],[p_width*2+10,100],[p_width,200],[10,100
 module base_box(){
 //前    
     translate([10,0,-10])
-         color("red")
+         color("grey")
     rotate([0,90,0])
     extrusion(E2020,2*p_width,center=false,cornerHole=true);
 
@@ -188,6 +197,7 @@ for(k=[[0,0,0],[0,0,p_height-40]]){
     translate(k){
 translate([0,10,10]){
 rotate([-90,0,0]){
+    color("pink")
 extrusion(E2020,p_length,center=false,cornerHole=true);}
 }
 }}
@@ -196,6 +206,7 @@ for(k=[[p_width/2,10,p_height+p_width*cos(45)/2]]){
     translate(k){
 translate([0,0,0]){
 rotate([-90,45,0]){
+    color("blue")
 extrusion(E2020,p_length,center=false,cornerHole=true);
     }
 }
@@ -205,11 +216,12 @@ extrusion(E2020,p_length,center=false,cornerHole=true);
 for(j=[[0,0,0],[0,p_length+20,0]]){
 translate(j){
 //左侧
+        color("yellow")
 extrusion(E2020,p_height-20,center=false,cornerHole=true);
     translate([
     10,0,p_height
     ]){
-    rotate([0,90+45,0]){
+    rotate([0,90+45,0]){       color("yellow")
 extrusion_wedge_down();}}
 
 //中段，下方
@@ -217,14 +229,16 @@ for(i=[[0,0,150],[0,0,p_height-20/cos(45)]]){
     translate(i){
 translate([10,0,20/cos(45)]){
 rotate([0,180,0]){
+    color("red")
 extrusion_wedge_up();}}
 translate([10+10*cos(45),0,10*cos(45)+20*cos(45)]){
 rotate([0,45,0]){
-    color("red")
+    color("blue")
 extrusion(E2020,(p_width)/cos(45)-20,center=false,cornerHole=true);}}
 
     translate([p_width+10,0,p_width]){
 rotate([0,0,0]){
+        color("red")
 extrusion_wedge_up();}}}}
 
 
@@ -238,35 +252,46 @@ extrusion_wedge_up();}}}}
 
 //四边形覆盖物 -A
  module polygon_extrude_A(){
-     color("GhostWhite")
-     rotate([-90,-90,0])
-linear_extrude(10,center=true){
- polygon([[0,0],[p_height,0],[p_height+p_width+20,p_width+20],[p_width+20,p_width+20]]);
-}}
+//     color("yellow")
+//     rotate([-90,-90,0])
+//linear_extrude(wall_thickness,center=true){
+// polygon([[0,0],[p_height,0],[p_height+p_width+20,p_width+20],[p_width+20,p_width+20]]);
+//}
+
+}
 
 //四边形覆盖物 -B -侧面长方形
  module polygon_extrude_B_wall(){
-          color("GhostWhite")
-translate([-20,-20,0])
-cube([10,p_length+40+20,p_height-30]);
+//          color("GhostWhite")
+//translate([-10-wall_thickness,-10-wall_thickness,0])
+//cube([wall_thickness,p_length+40+2*wall_thickness,p_height-20-wall_thickness]);
 }
 
 
 //四边形覆盖物 -C - 顶盖长方形，左侧
  module polygon_extrude_C_cover_left(){
-          color("GhostWhite")
-translate([-20-10*cos(45)-1,-20,p_height-10-20*cos(45)])
+          color("grey")
+translate([-20-10,-10-wall_thickness,
+     wall_thickness*cos(45)+p_height-20-wall_thickness
+     ])
      rotate([0,45,0])
-cube([10,p_length+40+20,p_width/cos(45)+20+10+10/cos(45)]);
+cube([wall_thickness,p_length+40+2*wall_thickness,
+     (p_width)/cos(45)+20/cos(45)+wall_thickness/cos(45)
+     
+     ]);
 }
 
 
 //四边形覆盖物 -C - 顶盖长方形，右侧
  module polygon_extrude_C_cover_right(){
-          color("GhostWhite")
-translate([-20-10*cos(45)-1,-20,p_height-10-20*cos(45)])
+          color("green")
+translate([-10-wall_thickness-wall_thickness*cos(45),-10-wall_thickness,p_height-20-wall_thickness+wall_thickness*cos(45)])
      rotate([0,45,0])
-cube([10,p_length+40+20,p_width/cos(45)+20+10+10+10/cos(45)+10]);
+    
+cube([wall_thickness,p_length+40+2*wall_thickness,
+          (p_width)/cos(45)+20/cos(45)+wall_thickness/cos(45)+wall_thickness+10
+     
+     ]);
 }
 
 
