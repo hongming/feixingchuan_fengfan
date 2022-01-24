@@ -38,7 +38,7 @@ include <NopSCADlib/utils/core/core.scad>
 
   铝型材尺寸20*20mm
   */
-p_width = 250;
+p_width = 150;
 p_height = 500;
 p_length = 500;
 wall_thickness = 17;
