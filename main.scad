@@ -44,7 +44,7 @@ p_length = 500;
 wall_thickness = 17;
 extrusion_specs=E2020;
 extrusion_specs_offset=20;
-rotate_left=30;
+rotate_left=60;
 rotate_right=60;
 
 //extrusion_specs=E4040;
@@ -62,7 +62,7 @@ translate([extrusion_specs_offset/2,0,0])
     //polygon_extrude_A();
   } //盖子A
   translate([-extrusion_specs_offset/2, p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
-  //  polygon_extrude_A();
+  //polygon_extrude_A();
   } //盖子A-后面
 
   //大四边形-左侧覆盖物
@@ -81,14 +81,14 @@ translate([p_width * 2+2*extrusion_specs_offset, 0]) {
       translate([0,0,0]){
     // 右边
     color("grey")
-    translate([extrusion_specs_offset + wall_thickness, 0, 0]) {
-//      polygon_extrude_B_wall();
+    translate([extrusion_specs_offset/2 + wall_thickness, 0, 0]) {
+     polygon_extrude_B_wall();
     }
     //顶盖-右侧
     translate([0, p_length + extrusion_specs_offset, 0]) {
       rotate([0, 0, 180]) {
 
- //       polygon_extrude_C_cover_right();
+     polygon_extrude_C_cover_right();
       }
     }
 
@@ -97,10 +97,10 @@ translate([p_width * 2+2*extrusion_specs_offset, 0]) {
       parallelgram();
       translate([-extrusion_specs_offset/2, -extrusion_specs_offset/2 - wall_thickness/2, -extrusion_specs_offset]) {
 
- //       polygon_extrude_A();
+      polygon_extrude_A();
       } //盖子A
       translate([-extrusion_specs_offset/2, p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
-//        polygon_extrude_A();
+        polygon_extrude_A();
       } //盖子A-后面
 
     }
@@ -125,12 +125,12 @@ translate([p_width + extrusion_specs_offset/2, p_length/2, -extrusion_specs_offs
 //底座
 base_box();
 
-translate([0, 0, -extrusion_specs_offset]) {
+translate([0, 0, -extrusion_specs_offset-10*extrusion_specs_offset]) {
         color("green")
   base_box();
 }
 
-translate([0, 0, -380 - 2*extrusion_specs_offset ]) {
+translate([0, 0, -380 - 2*extrusion_specs_offset-10*extrusion_specs_offset ]) {
 
   base_box_base();
 }
@@ -158,7 +158,7 @@ translate([-11, -extrusion_specs_offset + p_length, 0]) {
   flat_hinges();
 }
 
-//windbreak();
+windbreak();
 
 
 }
