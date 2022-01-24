@@ -38,88 +38,114 @@ include <NopSCADlib/utils/core/core.scad>
 
   铝型材尺寸20*20mm
   */
-p_width = 150;
+p_width = 250;
 p_height = 500;
 p_length = 500;
 wall_thickness = 17;
-//大四边形
-rotate([0, -40, 0]) {
-  parallelgram();
-  translate([-10, -10 - wall_thickness/2, -20]) {
+extrusion_specs=E2020;
+extrusion_specs_offset=20;
+rotate_left=30;
+rotate_right=60;
 
-    polygon_extrude_A();
+//extrusion_specs=E4040;
+//extrusion_specs_offset=40;
+
+//大四边形
+rotate([0, -rotate_left, 0]) {
+ 
+translate([extrusion_specs_offset/2,0,0])
+    {
+        
+          parallelgram();
+  translate([-extrusion_specs_offset/2, -extrusion_specs_offset/2 - wall_thickness/2, -extrusion_specs_offset]) {
+
+    //polygon_extrude_A();
   } //盖子A
-  translate([-10, p_length + 40 - 10 + wall_thickness/2, -20]) {
-    polygon_extrude_A();
+  translate([-extrusion_specs_offset/2, p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
+  //  polygon_extrude_A();
   } //盖子A-后面
 
   //大四边形-左侧覆盖物
   //侧面长方形
   // 左边
-  polygon_extrude_B_wall();
+  //polygon_extrude_B_wall();
   //顶盖-左侧
-  polygon_extrude_C_cover_left();
+  //polygon_extrude_C_cover_left();
+        }
 
 }
 
 //大四边形-右侧
-translate([p_width * 2 + 20, 0, 0]) {
-  rotate([0, 40, 0]) {
+translate([p_width * 2+2*extrusion_specs_offset, 0]) {
+  rotate([0, rotate_right, 0]) {
+      translate([0,0,0]){
     // 右边
     color("grey")
-    translate([20 + wall_thickness, 0, 0]) {
-      polygon_extrude_B_wall();
+    translate([extrusion_specs_offset + wall_thickness, 0, 0]) {
+//      polygon_extrude_B_wall();
     }
     //顶盖-右侧
-    translate([0, p_length + 20, 0]) {
+    translate([0, p_length + extrusion_specs_offset, 0]) {
       rotate([0, 0, 180]) {
 
-        polygon_extrude_C_cover_right();
+ //       polygon_extrude_C_cover_right();
       }
     }
 
     mirror([1, 0, 0]) {
+        translate([extrusion_specs_offset/2,0,0])
       parallelgram();
-      translate([-10, -10 - wall_thickness/2, -20]) {
+      translate([-extrusion_specs_offset/2, -extrusion_specs_offset/2 - wall_thickness/2, -extrusion_specs_offset]) {
 
-        polygon_extrude_A();
+ //       polygon_extrude_A();
       } //盖子A
-      translate([-10, p_length + 40 - 10 + wall_thickness/2, -20]) {
-        polygon_extrude_A();
+      translate([-extrusion_specs_offset/2, p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
+//        polygon_extrude_A();
       } //盖子A-后面
 
     }
+    
+}
   }
 }
 
+
+translate([extrusion_specs_offset/2,0,0])
+obs_base();
+
+
+//底部框架
+module obs_base(){
 //望远镜
 
-translate([p_width + 10, p_length/2, -20]) {
-  equipments();
+translate([p_width + extrusion_specs_offset/2, p_length/2, -extrusion_specs_offset]) {
+//  equipments();
 }
 
 //底座
 base_box();
 
-translate([0, 0, -20]) {
+translate([0, 0, -extrusion_specs_offset]) {
+        color("green")
   base_box();
 }
 
-translate([0, 0, -380 - 20 - 20]) {
+translate([0, 0, -380 - 2*extrusion_specs_offset ]) {
+
   base_box_base();
 }
 
 //电动伸缩杆-左侧
 translate([290, 5, 0]) {
   rotate([-90, -145, 0]) {
-    linear_actuator_close();
+  //  linear_actuator_close();
   }
 }
 
 //电动伸缩杆-右侧
-translate([50, p_length - 10, 0]) {
+translate([50, p_length - extrusion_specs_offset/2, 0]) {
   rotate([90, -20, 0]) {
-    linear_actuator_open();
+ //   linear_actuator_open();
   }
 }
 
@@ -128,11 +154,16 @@ translate([-11, -5, 0]) {
   flat_hinges();
 }
 
-translate([-11, -20 + p_length, 0]) {
+translate([-11, -extrusion_specs_offset + p_length, 0]) {
   flat_hinges();
 }
 
-windbreak();
+//windbreak();
+
+
+}
+
+
 //前后挡板
 module windbreak() {
 
@@ -141,13 +172,13 @@ module windbreak() {
     rotate([90, 0, 0]) {
 
       color("grey") {
-        linear_extrude(height = 10, center = true, convexity = 10) {
+        linear_extrude(height = extrusion_specs_offset, center = true, convexity = 10) {
           polygon(points = [
-            [10, 0],
-            [p_width * 2 + 10, 0],
-            [p_width * 2 + 10, 100],
+            [extrusion_specs_offset/2, 0],
+            [p_width * 2 + extrusion_specs_offset/2, 0],
+            [p_width * 2 + extrusion_specs_offset/2, 100],
             [p_width, 200],
-            [10, 100]
+            [extrusion_specs_offset/2, 100]
           ]);
         }
       }
@@ -158,88 +189,91 @@ module windbreak() {
 //底座
 module base_box() {
   //前    
-  translate([10, 0, -10])
-  color("grey")
+  translate([extrusion_specs_offset/2, 0, -extrusion_specs_offset/2])
+ 
   rotate([0, 90, 0])
-  extrusion(E2020, 2 * p_width, center = false, cornerHole = true);
+  extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
-  translate([10, 30, -10])
+  translate([extrusion_specs_offset/2, 30, -extrusion_specs_offset/2])
   rotate([0, 90, 0])
-  extrusion(E2020, 2 * p_width, center = false, cornerHole = true);
+  extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
   //后
-  translate([10, p_length + 20, -10])
-  color("red")
+  translate([extrusion_specs_offset/2, p_length + extrusion_specs_offset, -extrusion_specs_offset/2])
+ 
   rotate([0, 90, 0])
-  extrusion(E2020, 2 * p_width, center = false, cornerHole = true);
+  extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
-  translate([10, p_length - 10, -10])
+  translate([extrusion_specs_offset/2, p_length - extrusion_specs_offset/2, -extrusion_specs_offset/2])
   rotate([0, 90, 0])
-  extrusion(E2020, 2 * p_width, center = false, cornerHole = true);
+  extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
   //左
-  translate([0, -10, -10])
-  color("red")
+  translate([0, -extrusion_specs_offset/2, -extrusion_specs_offset/2])
+ 
   rotate([-90, 90, 0])
-  extrusion(E2020, p_length + 40, center = false, cornerHole = true);
+  extrusion(extrusion_specs, p_length + 2*extrusion_specs_offset, center = false, cornerHole = true);
 
   //右
-  translate([2 * p_width + 20, -10, -10])
-  color("red")
+  translate([2 * p_width + extrusion_specs_offset, -extrusion_specs_offset/2, -extrusion_specs_offset/2])
+ 
   rotate([-90, 90, 0])
-  extrusion(E2020, p_length + 40, center = false, cornerHole = true);
+  extrusion(extrusion_specs, p_length +2*extrusion_specs_offset, center = false, cornerHole = true);
 
 }
 
 //底座-接地支架
 module base_box_base() {
   //前    
-  translate([10, 0, -10])
-  color("grey")
+  translate([extrusion_specs_offset/2, 0, -extrusion_specs_offset/2])
+  color("green")
   rotate([0, 90, 0])
-  extrusion(E2020, 2 * p_width, center = false, cornerHole = true);
+  extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
-  translate([10, p_length/2 + 20, -10])
+  translate([extrusion_specs_offset/2, p_length/2 + extrusion_specs_offset, -extrusion_specs_offset/2])
   rotate([0, 90, 0])
-  color("red")
-  extrusion(E2020, 2 * p_width, center = false, cornerHole = true);
+  color("green")
+  extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
   //后
-  translate([10, p_length + 20, -10])
-
+  translate([extrusion_specs_offset/2, p_length + extrusion_specs_offset, -extrusion_specs_offset/2])
+  color("green")
   rotate([0, 90, 0])
-  extrusion(E2020, 2 * p_width, center = false, cornerHole = true);
+  extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
   //左
-  translate([0, -10 - 100, -10])
-  color("blue")
+  translate([0, -extrusion_specs_offset/2 - 100, -extrusion_specs_offset/2])
+  color("green")
   rotate([-90, 90, 0])
-  extrusion(E2020, p_length + 40 + 200, center = false, cornerHole = true);
+  extrusion(extrusion_specs, p_length + 2*extrusion_specs_offset + 200, center = false, cornerHole = true);
 
   //右
-  translate([2 * p_width + 20, -10 - 100, -10])
-  color("blue")
+  translate([2 * p_width + extrusion_specs_offset, -extrusion_specs_offset/2 - 100, -extrusion_specs_offset/2])
+  color("green")
   rotate([-90, 90, 0])
-  extrusion(E2020, p_length + 40 + 200, center = false, cornerHole = true);
+  extrusion(extrusion_specs, p_length + 2*extrusion_specs_offset + 200, center = false, cornerHole = true);
   //立柱
 
   translate([0, 0, 190]) {
-    extrusion(E2020, 380, cornerHole = true);
+    extrusion(extrusion_specs, 380, cornerHole = true);
   }
-  translate([p_width * 2 + 20, 0, 190]) {
-    extrusion(E2020, 380, cornerHole = true);
+  translate([p_width * 2 + extrusion_specs_offset, 0, 190]) {
+    extrusion(extrusion_specs, 380, cornerHole = true);
   }
-  translate([0, p_length + 20, 190]) {
-    extrusion(E2020, 380, cornerHole = true);
+  translate([0, p_length + extrusion_specs_offset, 190]) {
+    extrusion(extrusion_specs, 380, cornerHole = true);
   }
-  translate([p_width * 2, p_length + 20, 190]) {
-    extrusion(E2020, 380, cornerHole = true);
+  translate([p_width * 2+extrusion_specs_offset, p_length + extrusion_specs_offset, 190]) {
+    extrusion(extrusion_specs, 380, cornerHole = true);
   }
-  translate([0, p_length/2 + 20, 190]) {
-    extrusion(E2020, 380, cornerHole = true);
+  translate([0, p_length/2 + extrusion_specs_offset, 190]) {
+      
+    extrusion(extrusion_specs, 380, cornerHole = true);
   }
-  translate([p_width * 2, p_length/2 + 20, 190]) {
-    extrusion(E2020, 380, cornerHole = true);
+  translate([p_width * 2+extrusion_specs_offset, p_length/2 + extrusion_specs_offset, 190]) {
+
+
+    extrusion(extrusion_specs, 380, cornerHole = true);
   }
 }
 
@@ -247,74 +281,94 @@ module base_box_base() {
 module parallelgram() {
   for (k = [
       [0, 0, 0],
-      [0, 0, p_height - 40]
+   [0, 0, p_height - 10*extrusion_specs_offset],
+      [0, 0, p_height - 2*extrusion_specs_offset]
     ]) {
     translate(k) {
-      translate([0, 10, 10]) {
+      translate([0, extrusion_specs_offset/2, extrusion_specs_offset/2]) {
         rotate([-90, 0, 0]) {
-          color("pink")
-          extrusion(E2020, p_length, center = false, cornerHole = true);
+          color("red")
+          extrusion(extrusion_specs, p_length, center = false, cornerHole = true);
         }
       }
     }
   }
 
+
   for (k = [
-      [p_width/2, 10, p_height + p_width * cos(45)/2]
+      [0.5*p_width+(extrusion_specs_offset)/cos(rotate_left)+0.5*extrusion_specs_offset/cos(45), 0, p_height - 2*extrusion_specs_offset+p_width/2+extrusion_specs_offset+extrusion_specs_offset/cos(rotate_left)]
     ]) {
     translate(k) {
-      translate([0, 0, 0]) {
+      translate([0, extrusion_specs_offset/2, extrusion_specs_offset/2]) {
         rotate([-90, 45, 0]) {
           color("red")
-          extrusion(E2020, p_length, center = false, cornerHole = true);
+          extrusion(extrusion_specs, p_length, center = false, cornerHole = true);
         }
       }
     }
   }
+  
+  
+//  for (k = [
+//      [p_width/2, extrusion_specs_offset/2, p_height+p_width/2]
+//    ]) {
+//    translate(k) {
+//      translate([0, 0, 0]) {
+////                  rotate([0, 0, 0]) {
+//        rotate([-90,45, 0]) {
+//          color("pink")
+//          extrusion(extrusion_specs, p_length, center = false, cornerHole = true);
+//        }
+//      }
+//    }
+//  }
 
   //前后四边形
   for (j = [
       [0, 0, 0],
-      [0, p_length + 20, 0]
+      [0, p_length + extrusion_specs_offset, 0]
     ]) {
     translate(j) {
       //左侧
-      color("yellow")
-      extrusion(E2020, p_height - 20, center = false, cornerHole = true);
+      color("black")
+      extrusion(extrusion_specs, p_height - extrusion_specs_offset, center = false, cornerHole = true);
       translate([
-        10, 0, p_height
+        extrusion_specs_offset/2, 0, p_height
       ]) {
         rotate([0, 90 + 45, 0]) {
-          color("yellow")
-          extrusion_wedge_down();
+          color("black")
+          extrusion_wedge_down(extrusion_specs,extrusion_specs_offset);
         }
       }
 
       //中段，下方
       for (i = [
           [0, 0, 150],
-          [0, 0, p_height - 20/cos(45)]
+          [0, 0, p_height - extrusion_specs_offset/cos(45)]
         ]) {
         translate(i) {
-          translate([10, 0, 20/cos(45)]) {
+            
+            
+          translate([extrusion_specs_offset/2, 0, extrusion_specs_offset/cos(45)]) {
             rotate([0, 180, 0]) {
-              color("blue")
-              extrusion_wedge_up();
+              extrusion_wedge_up(extrusion_specs,extrusion_specs_offset);
             }
           }
-          translate([10 + 10 * cos(45), 0, 10 * cos(45) + 20 * cos(45)]) {
+          translate([extrusion_specs_offset/2 + extrusion_specs_offset/2 * cos(45), 0, (extrusion_specs_offset/2) * cos(45) + extrusion_specs_offset * cos(45)]) {
             rotate([0, 45, 0]) {
-              color("pink")
-              extrusion(E2020, (p_width)/cos(45) - 20, center = false, cornerHole = true);
+ 
+              extrusion(extrusion_specs, (p_width)/cos(45) - extrusion_specs_offset, center = false, cornerHole = true);
             }
           }
 
-          translate([p_width + 10, 0, p_width]) {
+          translate([p_width + extrusion_specs_offset/2, 0, p_width]) {
             rotate([0, 0, 0]) {
-              color("blue")
-              extrusion_wedge_up();
+  
+              extrusion_wedge_up(extrusion_specs,extrusion_specs_offset);
             }
           }
+          
+          
         }
       }
 
@@ -329,8 +383,8 @@ module polygon_extrude_A() {
     polygon([
       [0, 0],
       [p_height, 0],
-      [p_height + p_width + 20, p_width + 20],
-      [p_width + 20, p_width + 20]
+      [p_height + p_width + extrusion_specs_offset, p_width + extrusion_specs_offset],
+      [p_width + extrusion_specs_offset, p_width + extrusion_specs_offset]
     ]);
   }
 
@@ -338,18 +392,18 @@ module polygon_extrude_A() {
 
 //四边形覆盖物 -B -侧面长方形
 module polygon_extrude_B_wall() {
-  translate([-10 - wall_thickness, -10 - wall_thickness, 0])
-  cube([wall_thickness, p_length + 40 + 2 * wall_thickness, p_height - 20 - wall_thickness]);
+  translate([-extrusion_specs_offset/2 - wall_thickness, -extrusion_specs_offset/2 - wall_thickness, 0])
+  cube([wall_thickness, p_length + extrusion_specs_offset*2 + 2 * wall_thickness, p_height - extrusion_specs_offset - wall_thickness]);
 }
 
 //四边形覆盖物 -C - 顶盖长方形，左侧
 module polygon_extrude_C_cover_left() {
 
-  translate([ - 5-wall_thickness-wall_thickness, -10 - wall_thickness,
-    wall_thickness * cos(45) + p_height - 20 - wall_thickness
+  translate([ - 5-wall_thickness-wall_thickness, -extrusion_specs_offset/2 - wall_thickness,
+    wall_thickness * cos(45) + p_height - extrusion_specs_offset - wall_thickness
   ])
   rotate([0, 45, 0])
-  cube([wall_thickness, p_length + 40 + 2 * wall_thickness,    (p_width)/cos(45) + 20/cos(45) + wall_thickness/cos(45)
+  cube([wall_thickness, p_length + extrusion_specs_offset*2 + 2 * wall_thickness,    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45)
 
   ]);
 }
@@ -357,11 +411,11 @@ module polygon_extrude_C_cover_left() {
 //四边形覆盖物 -C - 顶盖长方形，右侧
 module polygon_extrude_C_cover_right() {
 
-  translate([-10 - wall_thickness - wall_thickness * cos(45), -10 - wall_thickness, p_height - 20 - wall_thickness + wall_thickness * cos(45)])
+  translate([-extrusion_specs_offset/2 - wall_thickness - wall_thickness * cos(45), -extrusion_specs_offset/2 - wall_thickness, p_height - extrusion_specs_offset - wall_thickness + wall_thickness * cos(45)])
   rotate([0, 45, 0])
 
-  cube([wall_thickness, p_length + 40 + 2 * wall_thickness,
-    (p_width)/cos(45) + 20/cos(45) + wall_thickness/cos(45) + wall_thickness + 10
+  cube([wall_thickness, p_length + 2*extrusion_specs_offset + 2 * wall_thickness,
+    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45) + wall_thickness + extrusion_specs_offset/2
 
   ]);
 }

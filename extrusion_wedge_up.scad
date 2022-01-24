@@ -21,12 +21,22 @@ include <NopSCADlib/utils/core/core.scad>
 include <NopSCADlib/vitamins/extrusions.scad>
 
 
-//铝型材的楔子，上方的
-module  extrusion_wedge_up(){
-  difference(){
-translate([-(20/2)*cos(45),0,(20/2)*cos(45)]){
-rotate([0,45,0]){
-extrusion(E2020,20,center=false,cornerHole=true);}}
+//extrusion_specs=E2020;
+//extrusion_specs_offset=20;
+// extrusion_wedge_up(extrusion_specs,extrusion_specs_offset);
 
-translate([0,-11,0]){
-cube([30*cos(45),22,20/cos(45)]);}}}
+eps=0.01;
+
+//铝型材的楔子，上方的
+module  extrusion_wedge_up(extrusion_specs,extrusion_specs_offset){
+  difference(){
+translate([-(extrusion_specs_offset/2)*cos(45)+eps,0,(extrusion_specs_offset/2)*cos(45)+eps]){
+rotate([0,45,0]){
+extrusion(extrusion_specs,extrusion_specs_offset-eps,center=false,cornerHole=true);}}
+
+translate([0,-extrusion_specs_offset+eps,0]){
+cube([2*extrusion_specs_offset*cos(45)+eps,2*extrusion_specs_offset,2*extrusion_specs_offset/cos(45)]);
+    
+    }
+
+}}
