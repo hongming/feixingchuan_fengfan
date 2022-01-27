@@ -24,7 +24,21 @@ include <NopSCADlib/utils/core/core.scad>
 
 
 
-module obs(){
+module obs(linear_actuator_preview,obs_cover_preview){
+    
+    if(linear_actuator_preview==1){
+    //左侧
+mirror([1,0,0]){
+    
+        translate([2*extrusion_specs_offset-2*p_width,extrusion_specs_offset/2+45/2+p_length-2*extrusion_specs_offset-5,extrusion_specs_offset+5]){
+ linear_actuator_in_place(90-rotate_left/2-42);}
+    }
+
+//右侧
+    translate([3*extrusion_specs_offset,extrusion_specs_offset/2+45/2,extrusion_specs_offset+5]){
+ linear_actuator_in_place(90-rotate_right/2-42);}
+ }
+ 
 
 //大四边形
 rotate([0, -rotate_left, 0]) {
@@ -35,17 +49,21 @@ translate([extrusion_specs_offset/2,0,0])
           parallelgram();
   translate([-extrusion_specs_offset/2, -extrusion_specs_offset/2 - wall_thickness/2, -extrusion_specs_offset]) {
 
+if(obs_cover_preview ==1)
     polygon_extrude_A();
   } //盖子A
   translate([-extrusion_specs_offset/2, p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
+      if(obs_cover_preview ==1)
   polygon_extrude_A();
   } //盖子A-后面
 
   //大四边形-左侧覆盖物
   //侧面长方形
   // 左边墙
+  if(obs_cover_preview ==1)
   polygon_extrude_B_wall();
   //顶盖-左侧
+  if(obs_cover_preview ==1)
   polygon_extrude_C_cover_left();
         }
 
@@ -58,12 +76,13 @@ translate([p_width * 2+2*extrusion_specs_offset, 0]) {
     // 右边
     color("grey")
     translate([extrusion_specs_offset/2 + wall_thickness, 0, 0]) {
+        if(obs_cover_preview ==1)
      polygon_extrude_B_wall();
     }
     //顶盖-右侧
     translate([-extrusion_specs_offset/2, p_length + extrusion_specs_offset, 0]) {
       rotate([0, 0, 180]) {
-
+if(obs_cover_preview ==1)
      polygon_extrude_C_cover_right();
       }
     }
@@ -72,10 +91,11 @@ translate([p_width * 2+2*extrusion_specs_offset, 0]) {
         translate([extrusion_specs_offset/2,0,0])
       parallelgram();
       translate([0, -extrusion_specs_offset/2 - wall_thickness/2, -extrusion_specs_offset]) {
-
+if(obs_cover_preview ==1)
       polygon_extrude_A();
       } //盖子A
       translate([0, p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
+          if(obs_cover_preview ==1)
         polygon_extrude_A();
       } //盖子A-后面
 
@@ -86,8 +106,10 @@ translate([p_width * 2+2*extrusion_specs_offset, 0]) {
 }
 
 translate([extrusion_specs_offset/2,0,0]){
+    if(obs_windbreak_preview ==1)
   windbreak();
 translate([0, p_length+extrusion_specs_offset/2+wall_thickness, 0]) {
+        if(obs_windbreak_preview ==1)
   windbreak();
 }}
 
@@ -96,13 +118,22 @@ translate([0, p_length+extrusion_specs_offset/2+wall_thickness, 0]) {
 
 
 //底部框架
-module obs_base(){
+module obs_base(equipments_preview, telescope_pier_preview,rotate_left){
 
 //望远镜
 translate([p_width + extrusion_specs_offset/2, p_length/2, -extrusion_specs_offset]) {
-//  equipments();
-}
+    
+if(equipments_preview ==1)
+    equipments(rotate_left);
 
+
+if( telescope_pier_preview ==1)
+{
+    translate([0,0,-base_height-base_offset-2*extrusion_specs_offset])
+telescope_pier();
+    }
+
+}
 //底座
 base_box();
 
@@ -220,26 +251,26 @@ module base_box() {
 module base_box_base() {
   //底-前    
   translate([extrusion_specs_offset/2, 0, -extrusion_specs_offset/2])
-  color("red")
+ color("grey")
   rotate([0, 90, 0])
   extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
 
   //底-后
   translate([extrusion_specs_offset/2, p_length + extrusion_specs_offset, -extrusion_specs_offset/2])
-  color("red")
+  color("grey")
   rotate([0, 90, 0])
   extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
   //底-左
   translate([0, -extrusion_specs_offset/2 - 100, -extrusion_specs_offset/2])
-  color("red")
+  color("grey")
   rotate([-90, 90, 0])
   extrusion(extrusion_specs, p_length + 2*extrusion_specs_offset + 200, center = false, cornerHole = true);
 
   //底-右
   translate([2 * p_width + extrusion_specs_offset, -extrusion_specs_offset/2 - 100, -extrusion_specs_offset/2])
-  color("red")
+   color("grey")
   rotate([-90, 90, 0])
   extrusion(extrusion_specs, p_length + 2*extrusion_specs_offset + 200, center = false, cornerHole = true);
  
@@ -268,26 +299,26 @@ module base_box_base() {
 
   //上-前    
   translate([extrusion_specs_offset/2, 0, -extrusion_specs_offset/2+base_height+extrusion_specs_offset])
-  color("red")
+ color("grey")
   rotate([0, 90, 0])
   extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
 
   //上-后
   translate([extrusion_specs_offset/2, p_length + extrusion_specs_offset, -extrusion_specs_offset/2+base_height+extrusion_specs_offset])
-  color("red")
+  color("grey")
   rotate([0, 90, 0])
   extrusion(extrusion_specs, 2 * p_width, center = false, cornerHole = true);
 
   //上-左
   translate([0, -extrusion_specs_offset/2 - 100, -extrusion_specs_offset/2+base_height+extrusion_specs_offset])
-  color("red")
+  color("grey")
   rotate([-90, 90, 0])
   extrusion(extrusion_specs, p_length + 2*extrusion_specs_offset + 200, center = false, cornerHole = true);
 
   //上-右
   translate([2 * p_width + extrusion_specs_offset, -extrusion_specs_offset/2 - 100, -extrusion_specs_offset/2+base_height+extrusion_specs_offset])
-  color("red")
+  color("grey")
   rotate([-90, 90, 0])
   extrusion(extrusion_specs, p_length + 2*extrusion_specs_offset + 200, center = false, cornerHole = true);
  
@@ -312,7 +343,7 @@ module parallelgram() {
     translate(k) {
       translate([0, extrusion_specs_offset/2, extrusion_specs_offset/2]) {
         rotate([-90, 0, 0]) {
-          color("red")
+          color("black")
           extrusion(extrusion_specs, p_length, center = false, cornerHole = true);
         }
       }
@@ -326,7 +357,7 @@ module parallelgram() {
     translate(k) {
       translate([0, extrusion_specs_offset/2, extrusion_specs_offset/2]) {
         rotate([-90, 45, 0]) {
-          color("red")
+          color("black")
           extrusion(extrusion_specs, p_length, center = false, cornerHole = true);
         }
       }
@@ -507,7 +538,7 @@ cube([2*extrusion_specs_offset*cos(45)+eps,2*extrusion_specs_offset,2*extrusion_
 
 
 //望远镜
-module equipments(){
+module equipments(rotate_left){
 
 //斜劈立柱
 difference(){
@@ -525,8 +556,11 @@ cylinder(h=170,r=40,center=false);
 //望远镜主体
        translate([0,55,190+30]){
        rotate([30,0,0]){
+         
     cube([120,150,120],center=true);
       translate([0,40,120+50]){
+        rotate([0,0,rotate_left])
+        color("black")
       cube([100,360,220],center=true);  }
   }
   }
@@ -552,31 +586,23 @@ for(i=[
 cylinder(h=50,r=5,center=false);}}
 
 
+//地面立柱
+module telescope_pier(){
+ 
+        cylinder(h=base_height+2*extrusion_specs_offset,r=40,center=false);
+    
+         cylinder(h=20,r=100,center=false);
+ 
+    }
 //电动推杆
 
-
-module linear_actuator_close(){
-    translate([0,12,17]){
-cube([22,24,10]);}
-
-    translate([22,45,2]){
-        color("blue")
-cube([132,40,40]);}
-
-translate([22,0,0]){
-    color("black")
-cube([200+120-11-11,45,45]);}
-
-    translate([200+120-1,12,11]){
-        color("red")
-cube([22,20,20]);}
-    }
-    
-    
-
-module linear_actuator_open(){
-    translate([0,18,11]){
-cube([22,10,24]);}
+    module linear_actuator_in_place(actuator_angel){
+rotate([90,-actuator_angel,0])
+   translate([0,-22.5,-22.5])
+{
+    translate([0,10,17]){
+cube([22,24,10]);
+        }
 
     translate([22,45,2]){
         color("blue")
@@ -586,12 +612,21 @@ translate([22,0,0]){
         color("black")
 cube([200+120-11-11,45,45]);}
 
+
+//伸缩 -开始
+
+translate([
+-(1-cos(actuator_angel))*(200+120-1+200)
+
+,0,0]){
+    translate([200+120-11-11+11+10,12,11]){
+ cube([200,20,20]);      
+}
+
     translate([200+120-1+200,12,11]){
         color("red")
 cube([22,20,20]);}
-
-    translate([200+120-11-11+11+10,12,11]){
- 
-cube([200,20,20]);}
-
+//伸缩 -结束
+}
+}
     }

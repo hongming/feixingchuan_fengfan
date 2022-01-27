@@ -21,36 +21,22 @@ include <NopSCADlib/utils/core/core.scad>
 include <NopSCADlib/vitamins/extrusions.scad>
 include <NopSCADlib/utils/layout.scad>
 include <NopSCADlib/printed/flat_hinge.scad>
-include <extrusion_wedge_up.scad>
-include <extrusion_wedge_down.scad>
-include<linear_actuator.scad>
-include<equipments.scad>
-
+include <feixingchuan_modules.scad>
 
 /*
 能够快速拆分为两个部分
 */
-
-
-
-/*
-有两个部分组成：升降结构、ROR结构。
-升降结构由升降机和连接件组成。
-ROR用于放置处于零位的望远镜结构，包含一个滑动顶盖。顶盖上方放置AllSKY相机和信息汇总屏。
-*/
-
-/*
-Parallelogram平行四边形
-宽：150mm
-高：450mm，要考虑增高节
-长：500mm
-
-铝型材尺寸20*20mm
-*/
+//铝型材规格
+extrusion_specs=E2020;
+extrusion_specs_offset=20;
+//extrusion_specs=E4040;
+//extrusion_specs_offset=40;
+wall_thickness=17;
 p_width=150;
 p_height=500;
 p_length=500;
 text_align=20;
+
 
 
 
@@ -86,7 +72,7 @@ extrusion(E2020,p_height-20,center=false,cornerHole=true);
     ]){
     rotate([0,90+45,0]){       color("red")
         
-extrusion_wedge_down();}}
+extrusion_wedge_down(extrusion_specs,extrusion_specs_offset);}}
 
         }}
         
@@ -99,7 +85,7 @@ for(i=[[-10,0,0]]){
 translate([10,0,20/cos(45)]){
 rotate([0,180,0]){
     color("red")
-extrusion_wedge_up();}}
+extrusion_wedge_up(extrusion_specs,extrusion_specs_offset);}}
 translate([10+10*cos(45),0,10*cos(45)+20*cos(45)]){
 rotate([0,45,0]){
     color("blue")
@@ -108,7 +94,7 @@ extrusion(E2020,(p_width)/cos(45)-20,center=false,cornerHole=true);}}
     translate([p_width+10,0,p_width]){
 rotate([0,0,0]){
         color("red")
-extrusion_wedge_up();}}}}}
+extrusion_wedge_up(extrusion_specs,extrusion_specs_offset);}}}}}
 
 
 
@@ -177,25 +163,25 @@ cube([574,17,383]);
        
  translate([1300,0,280+30+463+30]){
      
-         translate([0,0,130]){
-        part_color_text("多边形，17mm厚，1块");
-         translate([400,-20,-120]){
-             color("white")
-             part_color_text("边长：500mm");
+         translate([0,0,50]){
+        part_color_text("多边形，17mm厚，4块");
+         translate([-200,-20,-260]){
+             color("black")
+             part_color_text("单边长：500mm");
              }    
-                      translate([600,-20,-10]){
-             color("white")
+                      translate([120,-80,-80]){
+             color("black")
              part_color_text("45度角");
              }    
              
-                      translate([820,-20,-60]){
+                      translate([180,-20,-160]){
              color("black")
              part_color_text("高度170mm");
              }    
              
              }
-rotate([90,0,0])
- polygon(points=[[0,0],[500,0],[500+170,170],[170,170]]); 
+          rotate([0,90,180])   
+          polygon_extrude_A();   
     }
 
 
@@ -212,15 +198,10 @@ rotate([90,0,0])
         
                                        translate([480,-40,180]){
         part_color_text("顶角高度200mm");}
-        
- rotate([90,0,0])
-polygon(points = [
-            [0, 0],
-            [150 * 2 , 0],
-            [150 * 2 , 100],
-            [150, 200],
-            [0, 100]
-          ]);
+       
+        windbreak();
+
+        ;
   }
 
 
