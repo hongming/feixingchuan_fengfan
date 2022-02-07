@@ -108,7 +108,7 @@ if(obs_cover_preview ==1)
 translate([extrusion_specs_offset/2,0,0]){
     if(obs_windbreak_preview ==1)
   windbreak();
-translate([0, p_length+extrusion_specs_offset/2+wall_thickness, 0]) {
+translate([0, p_length+extrusion_specs_offset+wall_thickness, 0]) {
         if(obs_windbreak_preview ==1)
   windbreak();
 }}
@@ -162,22 +162,22 @@ translate([50, p_length - extrusion_specs_offset/2, 0]) {
 }
 
 //铰链-左侧
-translate([-11, -5, 0]) {
+translate([-11, extrusion_specs_offset+5, 0]) {
   flat_hinges();
 }
 
-translate([-11, -extrusion_specs_offset + p_length-5, 0]) {
+translate([-11, -extrusion_specs_offset-extrusion_specs_offset+ p_length-15, 0]) {
   flat_hinges();
 }
 
 //铰链-右侧
 translate([2*p_width+2*extrusion_specs_offset+5, 0, 0]) {
   mirror([0,0,1]){
-translate([-11, -5, 0]) {
+translate([-11, extrusion_specs_offset+5, 0]) {
   flat_hinges();
 }
 
-translate([-11, -extrusion_specs_offset + p_length-5, 0]) {
+translate([-11,-extrusion_specs_offset-extrusion_specs_offset+ p_length-15, 0]) {
   flat_hinges();
 }
 }
@@ -197,7 +197,7 @@ module windbreak() {
     rotate([90, 0, 0]) {
 
       color("grey") {
-        linear_extrude(height = extrusion_specs_offset, center = true, convexity = 10) {
+        linear_extrude(height = wall_thickness, center = true, convexity = 10) {
           polygon(points = [
             [extrusion_specs_offset/2, 0],
             [p_width * 2 + extrusion_specs_offset/2, 0],
@@ -326,7 +326,7 @@ module base_box_base() {
  difference(){
    translate([ extrusion_specs_offset/2, extrusion_specs_offset/2, base_height])
   color("grey")
-  cube([2*p_width,p_length,extrusion_specs_offset]);
+  cube([2*p_width,p_length,wall_thickness]);
    translate([ p_width+extrusion_specs_offset/2, p_length/2-extrusion_specs_offset/2, base_height-extrusion_specs_offset])
   cylinder(d=150,h=3*extrusion_specs_offset);
  }
@@ -451,21 +451,22 @@ module polygon_extrude_B_wall() {
   difference(){
   translate([-extrusion_specs_offset/2 - wall_thickness, -extrusion_specs_offset/2 - wall_thickness, 0])
   cube([wall_thickness, p_length + extrusion_specs_offset*2 + 2 * wall_thickness, p_height - extrusion_specs_offset - wall_thickness]);
-  translate([-5*wall_thickness, extrusion_specs_offset-55/2, 0]) {
-     cube([10*wall_thickness-0.01,55,25]); 
+  translate([-5*wall_thickness, -wall_thickness-extrusion_specs_offset/2+2*extrusion_specs_offset, 0]) {
+     cube([10*wall_thickness-0.01,60,25]); 
   }
-    translate([-5*wall_thickness,p_length-2*wall_thickness+6, 0]) {
-     cube([10*wall_thickness-0.01,55,25]); }
+    translate([-5*wall_thickness,p_length+2*extrusion_specs_offset-60-2*extrusion_specs_offset, 0]) {
+     cube([10*wall_thickness-0.01,60,25]); }
   }
 }
 
 //四边形覆盖物 -C - 顶盖长方形，左侧
 module polygon_extrude_C_cover_left() {
 
-  translate([ - 5-wall_thickness-wall_thickness, -extrusion_specs_offset/2 - 2*wall_thickness,
+  translate([ -wall_thickness*cos(45)-extrusion_specs_offset, -extrusion_specs_offset/2 - 2*wall_thickness,
     wall_thickness * cos(45) + p_height - extrusion_specs_offset - wall_thickness
   ])
   rotate([0, 45, 0])
+  color("grey")
   cube([wall_thickness, p_length + extrusion_specs_offset*2 + 4 * wall_thickness,    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45)
 
   ]);
