@@ -38,7 +38,7 @@ p_height = 500;
 p_length = 500;
 
 //木板厚度
-wall_thickness = 10;
+wall_thickness = 12;
 
 //底座高度
 base_height=380;
@@ -46,13 +46,14 @@ base_height=380;
 //底座分离数值
 base_offset=0;
 
-//左右两侧张开角度
+
 rotate_left=0;
 rotate_right=0;
+//左右两侧张开角度
 // rotate_left=60-60*$t;
 // rotate_right=60-60*$t;
 
-$vpr = [80,0, -$t * 45];
+//$vpr = [80,0, -$t * 45];
 
 //铝型材规格
 extrusion_specs=E2020;
@@ -61,15 +62,15 @@ extrusion_specs_offset=20;
 //extrusion_specs_offset=40;
 
 //是否放电动推杆
-linear_actuator_preview = 0;
+linear_actuator_preview = 1;
 //是否显示外壳
 obs_cover_preview = 1;
 //是否显示挡风板
 obs_windbreak_preview = 1;
  
  //是否显示望远镜
- equipments_preview =0;
- telescope_pier_preview=0;
+ equipments_preview =1;
+ telescope_pier_preview=1;
  
 if($preview){
  

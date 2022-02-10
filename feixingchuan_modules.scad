@@ -43,7 +43,9 @@ mirror([1,0,0]){
 //大四边形
 rotate([0, -rotate_left, 0]) {
  
-translate([extrusion_specs_offset/2,0,0])
+translate([
+  extrusion_specs_offset/2
+  ,0,0])
     {
         
           parallelgram();
@@ -52,7 +54,9 @@ translate([extrusion_specs_offset/2,0,0])
 if(obs_cover_preview ==1)
     polygon_extrude_A();
   } //盖子A
-  translate([-extrusion_specs_offset/2, p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
+  translate([
+    -extrusion_specs_offset/2
+    , p_length + 2*extrusion_specs_offset - extrusion_specs_offset/2 + wall_thickness/2, -extrusion_specs_offset]) {
       if(obs_cover_preview ==1)
   polygon_extrude_A();
   } //盖子A-后面
@@ -61,12 +65,19 @@ if(obs_cover_preview ==1)
   //侧面长方形
   // 左边墙
   if(obs_cover_preview ==1)
-  polygon_extrude_B_wall();
+  polygon_extrude_B_wall();}
   //顶盖-左侧
   if(obs_cover_preview ==1)
-  polygon_extrude_C_cover_left();
-        }
 
+
+  translate([0, -extrusion_specs_offset / 2 - 2 * wall_thickness, p_height -extrusion_specs_offset])
+   {
+     rotate([ 0, 45, 0 ])
+        translate([ 0, 0, -wall_thickness / cos(45) ])
+          mirror([ 1, 0, 0 ])
+            polygon_extrude_C_cover_left();
+  }
+  
 }
 
 //大四边形-右侧
@@ -325,7 +336,7 @@ module base_box_base() {
  //上-木板
  difference(){
    translate([ extrusion_specs_offset/2, extrusion_specs_offset/2, base_height])
-  color("grey")
+  color("red")
   cube([2*p_width,p_length,wall_thickness]);
    translate([ p_width+extrusion_specs_offset/2, p_length/2-extrusion_specs_offset/2, base_height-extrusion_specs_offset])
   cylinder(d=150,h=3*extrusion_specs_offset);
@@ -448,6 +459,7 @@ module polygon_extrude_A() {
 
 //四边形覆盖物 -B -侧面长方形
 module polygon_extrude_B_wall() {
+  color("grey")
   difference(){
   translate([-extrusion_specs_offset/2 - wall_thickness, -extrusion_specs_offset/2 - wall_thickness, 0])
   cube([wall_thickness, p_length + extrusion_specs_offset*2 + 2 * wall_thickness, p_height - extrusion_specs_offset - wall_thickness]);
@@ -462,11 +474,8 @@ module polygon_extrude_B_wall() {
 //四边形覆盖物 -C - 顶盖长方形，左侧
 module polygon_extrude_C_cover_left() {
 
-  translate([ -wall_thickness*cos(45)-extrusion_specs_offset, -extrusion_specs_offset/2 - 2*wall_thickness,
-    wall_thickness * cos(45) + p_height - extrusion_specs_offset - wall_thickness
-  ])
-  rotate([0, 45, 0])
-  color("grey")
+color("grey")
+
   cube([wall_thickness, p_length + extrusion_specs_offset*2 + 4 * wall_thickness,    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45)
 
   ]);
@@ -477,11 +486,36 @@ module polygon_extrude_C_cover_right() {
 
   translate([-extrusion_specs_offset/2 - wall_thickness - wall_thickness * cos(45), -extrusion_specs_offset/2 -2*wall_thickness, p_height - extrusion_specs_offset - wall_thickness + wall_thickness * cos(45)])
   rotate([0, 45, 0])
-
+  {
   cube([wall_thickness, p_length + 2*extrusion_specs_offset + 4 * wall_thickness,
-    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45) + wall_thickness + extrusion_specs_offset/2
+    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45) + 2*wall_thickness  
 
   ]);
+
+translate([
+  
+
+ 0,
+ 
+  0, 
+  
+    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45) + 2*wall_thickness 
+  ]) {
+
+//遮雨罩子
+color("red")
+{
+  cube([30, p_length + 2*extrusion_specs_offset + 4 * wall_thickness,1]);
+translate([-1,0,1])
+rotate([0, 90, 0]) {
+  cube([30, p_length + 2*extrusion_specs_offset + 4 * wall_thickness,1]);
+}
+}
+
+
+}
+  }
+  
 }
 
 //连接铰链

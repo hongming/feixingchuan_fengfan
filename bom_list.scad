@@ -31,7 +31,7 @@ extrusion_specs=E2020;
 extrusion_specs_offset=20;
 //extrusion_specs=E4040;
 //extrusion_specs_offset=40;
-wall_thickness=17;
+wall_thickness=12;
 p_width=150;
 p_height=500;
 p_length=500;
@@ -125,46 +125,77 @@ translate([0,0,280]){
     
     translate([520,-30,420/2]){
         color("white")
-        part_color_text("574*463mm，17mm厚，2块");}
-cube([574,17,463]);
-    ;}
+                part_color_text("564*468mm，12mm厚，2块");}
+// cube([
+//         p_length+2*extrusion_specs_offset+wall_thickness*2
+//         ,wall_thickness
+//         ,p_height - extrusion_specs_offset - wall_thickness
+//         ]);
+translate([extrusion_specs_offset,0,0])
+rotate([0,0,-90])
+polygon_extrude_B_wall();
+    }
  
 translate([0,0,280+30+463]){
-    
-    translate([520,0,330/2]){
-                color("white")
-        part_color_text("574*383mm，17mm厚, 1块");}
-        
+ 
         
             translate([560,0,330/2-100]){
                 color("white")
-        part_color_text("或者574*300mm，17mm厚, 1块");}
+        part_color_text("右盖588*282mm，12mm厚");}
         
-        
-cube([574,17,383]);
+        translate([0, wall_thickness, 0]) 
+rotate([0,0,-90]){
+//开始
+ cube([wall_thickness, p_length + 2*extrusion_specs_offset + 4 * wall_thickness,
+    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45) + 2*wall_thickness  
+
+  ]);
+//500+40+4*12=540+48=588
+//(150+20+12)/cos(45*pi/180)+24
+//结束
+
+}
+ 
     ;}
         
+//左侧翻盖
     
-    translate([0,0,280+30+463+30+383]){
+    translate([0,0,280+30+463+30+258]){
     
-    translate([520,0,330/2]){
-                color("white")
-        part_color_text("574*356mm，17mm厚, 1块");
-        
-        }
         
        translate([560,0,330/2-100]){
                 color("white")
-        part_color_text("或者574*265mm，17mm厚, 1块");
+        part_color_text("左盖588*258mm，12mm厚");
         
         }
-cube([574,17,383]);
-    ;}
+        translate([0, wall_thickness, 0]) 
+rotate([0,0,-90]){
+  cube([wall_thickness, p_length + extrusion_specs_offset*2 + 4 * wall_thickness,    (p_width)/cos(45) + extrusion_specs_offset/cos(45) + wall_thickness/cos(45)
+
+  ]);}
+
+
+    }
+
+//带洞木板
+    translate([-extrusion_specs_offset/2,wall_thickness,280+30+463+30+258+600]){
+
+translate([500, -20, -80]) 
+                            color("white")
+        part_color_text("带孔300*500mm，12mm厚");
+rotate([90,90,0])
+ difference(){
+   translate([ extrusion_specs_offset/2, extrusion_specs_offset/2, 0])
+  color("red")
+  cube([2*p_width,p_length,wall_thickness]);
+   translate([ p_width+extrusion_specs_offset/2, p_length/2-extrusion_specs_offset/2, -extrusion_specs_offset])
+  cylinder(d=150,h=3*extrusion_specs_offset);
+ }    }
        
  translate([1300,0,280+30+463+30]){
      
          translate([0,0,50]){
-        part_color_text("多边形，17mm厚，4块");
+        part_color_text("多边形，12mm厚，4块");
          translate([-200,-20,-260]){
              color("black")
              part_color_text("单边长：500mm");
@@ -188,7 +219,7 @@ cube([574,17,383]);
   translate([1300,0,280+30+30]){
       
                translate([0,0,80]){
-        part_color_text("多边形，20mm厚，2块");}
+        part_color_text("多边形，12mm厚，2块");}
         
                        translate([280,-40,-30]){
         part_color_text("底边长300mm");}
