@@ -18,7 +18,8 @@ Email邮箱：hongming@huiyi.org
 * 电动推杆
 
 ## 结构演示
-![](/images/2022-02-10 11.52.13pm.png)
+![](images/2022-02-10%2011.52.13pm.png)
+
 
 ![](/images/2022-01-08%202.02.30%20pm.png)
 
