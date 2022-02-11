@@ -123,9 +123,16 @@ extrusion(E2020,740,center=false);}
 //cover
 translate([0,0,280]){
     
-    translate([520,-30,420/2]){
+    translate([570,-30,420/2]){
         color("white")
-                part_color_text("564*468mm，12mm厚，2块");}
+                part_color_text("564*468mm，12mm厚，2块");
+       translate([0,0,-100]){
+                        part_color_text("挖两个方洞60mm*25mm");
+                  translate([0,0,-60]){
+                        part_color_text("边缘距离50mm");}
+           
+           }
+        }
 // cube([
 //         p_length+2*extrusion_specs_offset+wall_thickness*2
 //         ,wall_thickness
@@ -182,7 +189,11 @@ rotate([0,0,-90]){
 
 translate([500, -20, -80]) 
                             color("white")
-        part_color_text("带孔300*500mm，12mm厚");
+        part_color_text("300*500mm，12mm厚");
+        
+        translate([500, -20, -300]) 
+                            color("white")
+        part_color_text("中心打孔，直径150mm");
 rotate([90,90,0])
  difference(){
    translate([ extrusion_specs_offset/2, extrusion_specs_offset/2, 0])
@@ -195,7 +206,7 @@ rotate([90,90,0])
  translate([1300,0,280+30+463+30]){
      
          translate([0,0,50]){
-        part_color_text("多边形，12mm厚，4块");
+        part_color_text("平行四边形，12mm厚，4块");
          translate([-200,-20,-260]){
              color("black")
              part_color_text("单边长：500mm");
@@ -219,7 +230,7 @@ rotate([90,90,0])
   translate([1300,0,280+30+30]){
       
                translate([0,0,80]){
-        part_color_text("多边形，12mm厚，2块");}
+        part_color_text("五边形，12mm厚，2块 ->");}
         
                        translate([280,-40,-30]){
         part_color_text("底边长300mm");}
@@ -240,13 +251,13 @@ module part_text(i){
 translate([-text_align,0,0])
 rotate([90,0,0])
 color("black")
-text(i,size=10,halign="right",font="Heiti SC",language="cn")
+text(i,size=10,halign="right",font="微软雅黑",language="cn")
     ;}
 
 module part_color_text(i){
 translate([-text_align,0,0])
 rotate([90,0,0])
 color("black")
-text(i,size=30,halign="right",font="Songti SC",language="cn")
+text(i,size=30,halign="right",font="微软雅黑",language="cn")
     
     ;}
