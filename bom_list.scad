@@ -16,6 +16,14 @@
 // You should have received a copy of the GNU General Public License along with NopSCADlib.
 // If not, see <https://www.gnu.org/licenses/>.
 //
+/*
+12mm厚度版本
+长方形板，1块，300mm*500mm，中间打一个直径150mm的孔
+长方形板，1块，588mm*258mm
+长方形板，1块，588mm*282mm
+平行四边形，4块，单边长500mm，170mm高，45度角，如图
+五边形板，1块，如图
+*/
 
 include <NopSCADlib/utils/core/core.scad>
 include <NopSCADlib/vitamins/extrusions.scad>
