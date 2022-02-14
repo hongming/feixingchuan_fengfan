@@ -47,8 +47,8 @@ base_height=380;
 base_offset=0;
 
 
-rotate_left=0;
-rotate_right=0;
+rotate_left=30;
+rotate_right=30;
 //左右两侧张开角度
 // rotate_left=60-60*$t;
 // rotate_right=60-60*$t;
@@ -62,15 +62,15 @@ extrusion_specs_offset=20;
 //extrusion_specs_offset=40;
 
 //是否放电动推杆
-linear_actuator_preview = 1;
+linear_actuator_preview = 0;
 //是否显示外壳
-obs_cover_preview = 1;
+obs_cover_preview = 0;
 //是否显示挡风板
-obs_windbreak_preview = 1;
+obs_windbreak_preview = 0;
  
  //是否显示望远镜
- equipments_preview =1;
- telescope_pier_preview=1;
+ equipments_preview =0;
+ telescope_pier_preview=0;
  
 if($preview){
  
